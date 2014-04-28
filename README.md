@@ -10,3 +10,5 @@ Features
 * Writable dir locator
 * Config finder
 * Backdoor scanner
+
+default password :bajaxer
